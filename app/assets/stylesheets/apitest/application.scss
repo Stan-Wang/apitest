@@ -1,0 +1,37 @@
+// Place all the styles related to the apitest/v1 controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+//= require_directory .
+//= require bootstrap
+//= require adminlte/adminlte
+//= require adminlte/skins/_all-skins
+//= require font-awesome
+//= require_self
+
+#apitest_show{
+  #server-logs-output {
+    background-color: #444;
+    color: #ddd;
+    height: 794px;
+    overflow: scroll;
+    padding: 10px;
+    vertical-align: top;
+  }
+  .result{
+     resize: none;
+  }
+  .result_pre{
+    background-color: #fff;
+    height: 514px;
+    border-radius: 0px;
+    padding: 15px 30px 15px 30px;
+  }
+  .nav-pills.nav-stacked{
+    li.active {
+      a{
+        background-color: #337ab7;
+        color: #fff;
+      }
+    }
+  }
+}

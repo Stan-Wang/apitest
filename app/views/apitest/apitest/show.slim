@@ -1,0 +1,92 @@
+.content-header 
+  h1 =params[:id].upcase
+section.content
+  .col-sm-5.row 
+    .groups v-bind:class="{hide: apitest_tab_show == 'server_log'}"
+      .col-sm-6
+        .box.box-primary v-for="(group_doc , group_name) in apis"
+          .box-header.with-border 
+            h3.box-title ="{{group_name}}"
+            .box-tools
+              button.btn.btn-box-tool data-widget="collapse" type="button" 
+                .fa.fa-minus 
+          .box-body.no-padding
+            .nav.nav-pills.nav-stacked 
+              li v-bind:class="{active: current_group == group.group_name , disabled: group.active == false}" v-for="group in group_doc"
+                a  @click="group_select(group.group_name)"  href="javascript:void(0)" ="{{group.group_name}}"
+
+      .col-sm-6 v-for="(group_doc , group_name) in apis"
+          .box.box-primary v-for="group in group_doc" v-bind:class="{hide: current_group != group.group_name}"
+            .box-header.with-border 
+              h3.box-title ="{{group.group_name}}"
+            .box-body.no-padding
+              .nav.nav-pills.nav-stacked
+                li v-for="(api , name) in group.apis" v-bind:class="{active: current_group == group.group_name && current_api == name ,disabled: api.active == false}" 
+                  a @click="api_select(name)"   href="javascript:void(0)" 
+                    .list-group-item-heading  = "{{api.api_name}}"
+                    .list-group-item-text     = "{{api.path}}"
+
+    .col-sm-12
+      .box.box-danger.server-logs-wrap v-bind:class="{hide: apitest_tab_show == 'api_test'}"
+        .box-header.with-border
+          h4.box-title Server Logs
+        .box-body
+          #server-logs-output contenteditable='true'
+  .col-sm-7
+    .api-wrap
+      .row v-for="(group_doc , group_name) in apis" 
+        .col-sm-12 v-for="group in group_doc" v-bind:class="{hide:  current_group != group.group_name}"
+          .api v-for="(api , name) in group.apis"  v-bind:class="{hide: current_api != name || current_group != group.group_name}"
+            .nav-tabs-custom
+              ul.nav.nav-tabs 
+                li.api-wrap-tab           @click="show_api_test"      v-bind:class="{active: apitest_tab_show == 'api_test'}"
+                  a href="javascript:void(0)" API Test
+                li.server-logs-warp-tab   @click="show_server_log"    v-bind:class="{active: apitest_tab_show == 'server_log'}"
+                  a href="javascript:void(0)" Server Logs
+              .tab-content.no-padding 
+                table.table 
+                  tbody 
+                    tr 
+                      td.col-md-2 style="border-top:none"
+                        h4 API名称
+                      td style="border-top:none"
+                        h4 ="{{api.api_name}}"
+                    tr
+                      td url
+                      td
+                        input.form-control.url :value="root_url + api.path"
+                    tr
+                      td path
+                      td 
+                        input.form-control.path :value="api.path"
+                    tr
+                      td 提交方式
+                      td.method ="{{api.method}}"
+                    tr
+                      td 参数
+                      td
+                        table.table.table-hover.table-bordered
+                          tr v-for="(value , name , index) in api.params"
+                            td.col-md-2 v-bind:class="{'border-top-none': (index == 0)}"
+                              span style="color:red;width:10px;display:inline-block" 
+                                span v-if="value.required" *
+                              span ="{{name}}"
+                            td v-if="name == 'token'" v-bind:class="{'border-top-none': index == 0}" 
+                              input.form-control.params :name="name" :value="token"
+                              span style="line-height:25px" = "{{value.text}}"
+                            td v-if="name != 'token'" v-bind:class="{'border-top-none': index == 0}" 
+                              input.form-control.params :name="name" 
+                              span style="line-height:25px" = "{{value.text}}"
+                    tr
+                      td
+                      td 
+                        button.btn.bg-olive.btn-flat @click="api_submit"  提交                    
+                        button.btn.bg-orange.btn-flat style="margin-left:10px;margin-right:10px"   @click="clear_result" 清空结果
+                        button.btn.bg-purple.btn-flat style="margin-left:10px;margin-right:10px" @click="show_server_log" 查看server log
+                        button.btn.btn-warning.btn-flat  style="margin-right:10px" @click="clear_log"  清空log
+                    tr
+                      td 
+                      td
+                        pre.result_pre contenteditable='true'
+                        / textarea.form-control.result rows="25"
+  .clearfix

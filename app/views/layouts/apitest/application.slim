@@ -1,0 +1,36 @@
+doctype 5
+html
+  head  
+    title API TEST
+    = csrf_meta_tags 
+    = stylesheet_link_tag    'apitest/application', 'data-turbolinks-track': 'reload' , media: 'all'
+    = javascript_include_tag 'apitest/application', 'data-turbolinks-track': 'reload' 
+  body.hold-transition.skin-purple-light.sidebar-mini
+    .wrapper id="apitest_#{params[:action]}"
+      header.main-header
+        a.logo href="#{root_path}" 
+          span.logo-mini T
+          span.logo-lg API TEST
+        .navbar.navbar-static-top role="navigation"
+          a.sidebar-toggle data-toggle="offcanvas" row="button" href="#"
+            span.sr-only Toggle navigation
+      aside.main-sidebar
+        section.sidebar
+          ul.sidebar-menu
+            li.treeview.active
+              a href="#" 
+                i.fa.fa-code.text-purple
+                span API版本
+              ul.treeview-menu
+                -@apidocs.each do |version , apis|
+                  li.treeview
+                    a href="#{root_path}#{version}" 
+                      i.fa.fa-code-fork.text-purple
+                      span =version.upcase
+      main.content-wrapper
+        =yield
+      footer.main-footer 
+    -if params[:action] == 'show'
+      #data data-root-url="#{@root_url}" data-ws-url="ws://#{request.host}:9527" data-apis="#{@apidocs[params[:id]].to_json}" data-token="#{session[:token]}"
+
+      
