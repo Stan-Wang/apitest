@@ -1,5 +1,6 @@
 Process.detach(
   fork do
+    p 'Kill Apitest WebSocket Process ...'
     `lsof -i :9527 |awk '$1 == "ruby"  {print $2}' |xargs kill -9`
     begin
       class Reader < EventMachine::FileTail
@@ -23,6 +24,7 @@ Process.detach(
           }
           EventMachine::file_tail(filename, Reader, &proc)
         end
+        p 'Start Apitest WebSocket Process !'
       end
     rescue Exception => e
       retry
