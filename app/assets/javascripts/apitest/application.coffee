@@ -87,7 +87,7 @@ $(document).on "turbolinks:load" , ->
         show_server_log : ->
           @apitest_tab_show = 'server_log'
           @get_log()
-  $.AdminLTE.layout.fix()
+  $.AdminLTE.layout.fix() if $.AdminLTE.layout
   
  
 
