@@ -1,13 +1,12 @@
 PATH
   remote: .
   specs:
-    apitest (0.1.1)
+    apitest (0.1.2)
       ansi-to-html
       eventmachine
       eventmachine-tail
       font-awesome-rails
       ionicons-rails
-      jbuilder
       rails (~> 5.0.2)
       rails-adminlte
       slim-rails
@@ -132,7 +131,7 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.7)
-    tzinfo (1.2.2)
+    tzinfo (1.2.3)
       thread_safe (~> 0.1)
     vuejs-rails (2.2.1)
     websocket (1.2.4)
