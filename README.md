@@ -1,28 +1,53 @@
 # Apitest
 Short description and motivation.
 
-## Usage
-How to use my plugin.
+## Version 
+0.1.3
 
 ## Installation
-Add this line to your application's Gemfile:
+添加如下代码到 Gemfile:
 
 ```ruby
 gem 'apitest'
 ```
 
-And then execute:
+执行:
 ```bash
-$ bundle
+$ bundle install
 ```
 
-Or install it yourself as:
-```bash
-$ gem install apitest
+## Usage
+
+约定的api目录如下：
+```shell
+├── controllers
+│   ├── api
+│   │   └── v1
+│   │       ├── foo_controller.rb
+│   │       ├── bar_controller.rb
+│   │   └── v2
+│   │       ├── foobar_controller.rb
+│   │       ├── barfoo_controller.rb
 ```
+
+mount apitest到指定url，比如：
+
+```ruby
+mount Apitest::Engine => "/apitest"
+
+```
+
+浏览器中访问apitest 的url
+
+
+
+
+## TODO
+- [ ] 不同平台kill不掉websocket进程的问题
+- [ ] 可自定义api目录
 
 ## Contributing
-Contribution directions go here.
+
 
 ## License
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+[MIT License](http://opensource.org/licenses/MIT).
