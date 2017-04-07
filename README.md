@@ -2,7 +2,7 @@
 Short description and motivation.
 
 ## Version 
-0.1.3
+0.1.4
 
 ## Installation
 添加如下代码到 Gemfile:
@@ -14,6 +14,21 @@ gem 'apitest'
 执行:
 ```bash
 $ bundle install
+```
+
+安装lsof
+
+
+```bash
+$ yum install lsof -y  #CentOS
+```
+
+```bash
+$ sudo apt-get install lsof -y #Ubuntu
+```
+
+```bash
+$ brew install lsof #MacOS
 ```
 
 ## Usage
@@ -43,7 +58,6 @@ mount Apitest::Engine => "/apitest"
 
 
 ## TODO
-- [ ] 不同平台kill不掉websocket进程的问题
 - [ ] 可自定义api目录
 
 ## Contributing
