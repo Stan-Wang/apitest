@@ -10,6 +10,7 @@ require 'eventmachine-tail'
 require 'websocket-eventmachine-server'
 
 module Apitest
+  @config
   class Reader < EventMachine::FileTail
     def initialize(path, startpos=-1, &block)
       super(path, startpos)
@@ -44,7 +45,34 @@ module Apitest
       end
     )
   end
+  def self.config 
+    @config
+  end
+
+  def self.configure(&block)
+    block.call
+  end
 end
 
+module ActionDispatch::Routing
+  class Mapper
+    def apitest_for(avgs)
+      # root to: 'apitest#index'
+      # get 'apitest' => apitest_path
 
+      # p avgs
+      # Rails.application.routes.draw do
+        # resources :apitest
+      # end
+      
+      # get '/:id' , to: 'apitest#show'
+    end
+    # def apitest_scope(avgs)
+    #   Rails.application.routes.draw do
+    #     resources :apitest
+    #   end
+    #   # resources :apitest
+    # end
+  end
+end
 

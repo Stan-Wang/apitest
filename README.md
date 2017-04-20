@@ -60,6 +60,11 @@ mount Apitest::Engine => "/apitest"
 ## TODO
 - [ ] 可自定义api目录
 - [ ] 可自定义theme
+- [ ] ERROR类工具
+- [ ] APIDOC美化
+- [ ] 权限控制
+- [ ] 测试数据准备，测试用例
+- [ ] 测试中心
 
 ## Contributing
 
