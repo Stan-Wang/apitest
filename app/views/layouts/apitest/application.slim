@@ -5,7 +5,7 @@ html
     = csrf_meta_tags 
     = stylesheet_link_tag    'apitest/application', 'data-turbolinks-track': 'reload' , media: 'all'
     = javascript_include_tag 'apitest/application', 'data-turbolinks-track': 'reload' 
-  body.hold-transition.skin-purple-light.sidebar-mini
+  body.hold-transition.sidebar-mini class="skin-#{Apitest::theme}"
     .wrapper id="apitest_#{params[:action]}"
       header.main-header
         a.logo href="#{root_path}" 

@@ -10,18 +10,19 @@ require 'eventmachine-tail'
 require 'websocket-eventmachine-server'
 
 module Apitest
-  @config
-  class Reader < EventMachine::FileTail
-    def initialize(path, startpos=-1, &block)
-      super(path, startpos)
-      @buffer = BufferedTokenizer.new
-      @block = block
-    end
+  @api_dir
+  @theme
 
-    def receive_data(data)
-      @buffer.extract(data).each { |line| @block.call(line) }
-    end
+  def self.api_dir(dir = nil)
+    @api_dir = dir if dir
+    @api_dir
   end
+
+  def self.theme(theme = nil)
+    @theme = theme if theme
+    @theme
+  end
+  
   def self.start_server_log_listen
     Process.detach(
       fork do
@@ -45,34 +46,28 @@ module Apitest
       end
     )
   end
-  def self.config 
-    @config
-  end
 
-  def self.configure(&block)
-    block.call
+  class Reader < EventMachine::FileTail
+    def initialize(path, startpos=-1, &block)
+      super(path, startpos)
+      @buffer = BufferedTokenizer.new
+      @block = block
+    end
+
+    def receive_data(data)
+      @buffer.extract(data).each { |line| @block.call(line) }
+    end
   end
 end
 
 module ActionDispatch::Routing
   class Mapper
-    def apitest_for(avgs)
-      # root to: 'apitest#index'
-      # get 'apitest' => apitest_path
-
-      # p avgs
-      # Rails.application.routes.draw do
-        # resources :apitest
-      # end
-      
-      # get '/:id' , to: 'apitest#show'
+    def apitest_for(path , &block)
+      mount Apitest::Engine => path
+      Apitest::api_dir    'api'
+      Apitest::theme      'blue-light'
+      block.call
     end
-    # def apitest_scope(avgs)
-    #   Rails.application.routes.draw do
-    #     resources :apitest
-    #   end
-    #   # resources :apitest
-    # end
   end
 end
 

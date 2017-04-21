@@ -1017,7 +1017,7 @@ body .markdown-body
 </style><title>README</title></head><body><article class="markdown-body"><h1 id="apitest"><a name="user-content-apitest" href="#apitest" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Apitest</h1>
 <p>Short description and motivation.</p>
 <h2 id="version"><a name="user-content-version" href="#version" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Version</h2>
-<p>0.1.4</p>
+<p>0.1.5</p>
 <h2 id="installation"><a name="user-content-installation" href="#installation" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Installation</h2>
 <p>添加如下代码到 Gemfile:</p>
 <pre><code class="ruby">gem 'apitest'
@@ -1047,19 +1047,46 @@ body .markdown-body
 │   │       ├── foobar_controller.rb
 │   │       ├── barfoo_controller.rb
 </code></pre></p>
-<p>mount apitest到指定url，比如：</p>
-<pre><code class="ruby">mount Apitest::Engine =&gt; &quot;/apitest&quot;
+<p>在routes.rb 配置apitest 目录，比如：</p>
+<pre><code class="ruby">  apitest_for '/apitest'
 
 </code></pre>
 
 <p>浏览器中访问apitest 的url</p>
+<p>默认api目录为controllers/api，目录可指定</p>
+<pre><code class="ruby">  apitest_for '/apitest' do 
+    Apitest::api_dir 'api'
+  end 
+</code></pre>
+
+<p>默认使用blue-theme，可指定theme ，theme使用 AdminLTE，直接指定AdminLTE的theme即可：</p>
+<p><pre><code class="ruby">  apitest_for '/apitest' do 
+    Apitest::theme  'purple-light'
+  end
+</code></pre><br />
+theme列表如下<br />
+<pre><code>black-light
+black
+blue-light
+blue
+green-light
+green
+purple-light
+purple
+red-light
+red
+yellow-light
+yellow
+</code></pre></p>
 <h2 id="todo"><a name="user-content-todo" href="#todo" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>TODO</h2>
 <ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled> 可自定义api目录</li>
-<li class="task-list-item"><input type="checkbox" disabled> 可自定义theme</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可自定义api目录</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可自定义theme</li>
 <li class="task-list-item"><input type="checkbox" disabled> ERROR类工具</li>
 <li class="task-list-item"><input type="checkbox" disabled> APIDOC美化</li>
-<li class="task-list-item"><input type="checkbox" disabled> 测试数据保存，提测</li>
+<li class="task-list-item"><input type="checkbox" disabled> 权限控制</li>
+<li class="task-list-item"><input type="checkbox" disabled> 测试数据准备，测试用例</li>
+<li class="task-list-item"><input type="checkbox" disabled> 测试中心</li>
 </ul>
 <h2 id="contributing"><a name="user-content-contributing" href="#contributing" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Contributing</h2>
 <h2 id="license"><a name="user-content-license" href="#license" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>License</h2>

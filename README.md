@@ -2,7 +2,7 @@
 Short description and motivation.
 
 ## Version 
-0.1.4
+0.1.5
 
 ## Installation
 添加如下代码到 Gemfile:
@@ -45,21 +45,51 @@ $ brew install lsof #MacOS
 │   │       ├── barfoo_controller.rb
 ```
 
-mount apitest到指定url，比如：
+在routes.rb 配置apitest 目录，比如：
 
 ```ruby
-mount Apitest::Engine => "/apitest"
+  apitest_for '/apitest'
 
 ```
 
 浏览器中访问apitest 的url
 
+默认api目录为controllers/api，目录可指定
+
+```ruby
+  apitest_for '/apitest' do 
+    Apitest::api_dir 'api'
+  end 
+```
+
+默认使用blue-theme，可指定theme ，theme使用 AdminLTE，直接指定AdminLTE的theme即可：
+
+``` ruby
+  apitest_for '/apitest' do 
+    Apitest::theme  'purple-light'
+  end
+```
+theme列表如下
+```
+black-light
+black
+blue-light
+blue
+green-light
+green
+purple-light
+purple
+red-light
+red
+yellow-light
+yellow
+```
 
 
 
 ## TODO
-- [ ] 可自定义api目录
-- [ ] 可自定义theme
+- [x] 可自定义api目录
+- [x] 可自定义theme
 - [ ] ERROR类工具
 - [ ] APIDOC美化
 - [ ] 权限控制
