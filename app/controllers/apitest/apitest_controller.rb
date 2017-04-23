@@ -26,13 +26,6 @@ module Apitest
       @root_url = main_app.root_url[0,main_app.root_url.length - 1]
     end  
 
-    def docs_base 
-      {
-        '业务API' => [] ,
-        '工具API' => [] ,
-        '辅助API' => []
-      }
-    end
     def get_doc(path_root = nil)
       path_root ||= "app/controllers/#{Apitest.api_dir}/"
       Dir.glob("#{path_root}*").each do |path|
@@ -41,7 +34,7 @@ module Apitest
     end
 
     def get_version_doc(path_root)
-      docs = docs_base
+      docs = Apitest::default_types.clone
       Dir.glob("#{path_root}/*").each do |path|
         if File.directory?(path)
           docs = docs.merge get_version_doc(path)

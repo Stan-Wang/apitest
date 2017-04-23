@@ -12,6 +12,7 @@ require 'websocket-eventmachine-server'
 module Apitest
   @api_dir
   @theme
+  @default_types
 
   def self.api_dir(dir = nil)
     @api_dir = dir if dir
@@ -22,7 +23,14 @@ module Apitest
     @theme = theme if theme
     @theme
   end
-  
+
+  def self.default_types(default_types = [])
+    @default_types ||= {}
+    default_types.each do |type|
+      @default_types[type] = []
+    end
+    @default_types
+  end
   def self.start_server_log_listen
     Process.detach(
       fork do
@@ -64,8 +72,9 @@ module ActionDispatch::Routing
   class Mapper
     def apitest_for(path , &block)
       mount Apitest::Engine => path
-      Apitest::api_dir    'api'
-      Apitest::theme      'blue-light'
+      Apitest::api_dir        'api'
+      Apitest::theme          'blue-light'
+      # Apitest::default_types  [ '业务API' , '工具API' , '辅助API' ]
       block.call
     end
   end
