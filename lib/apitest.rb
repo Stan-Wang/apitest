@@ -25,7 +25,8 @@ module Apitest
   end
 
   def self.default_types(default_types = [])
-    @default_types ||= {}
+    return @default_types if default_types.blank?
+    @default_types = {}
     default_types.each do |type|
       @default_types[type] = []
     end
@@ -70,12 +71,12 @@ end
 
 module ActionDispatch::Routing
   class Mapper
-    def apitest_for(path , &block)
+    def apitest_for(path , &block )
       mount Apitest::Engine => path
       Apitest::api_dir        'api'
       Apitest::theme          'blue-light'
-      # Apitest::default_types  [ '业务API' , '工具API' , '辅助API' ]
-      block.call
+      Apitest::default_types  [ '业务API' , '工具API' , '辅助API' ]
+      yield if block
     end
   end
 end

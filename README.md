@@ -144,6 +144,7 @@ end
 - [ ] ERROR类工具
 - [ ] Apitest Example 网站
 - [ ] 使用前端route
+- [ ] 生成前端mock数据
 - [ ] 保存API分类收起展开状态
 - [ ] ERROR log 可选输出
 - [ ] 一个token默认机制
