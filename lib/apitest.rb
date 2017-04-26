@@ -13,47 +13,59 @@ module Apitest
   @api_dir
   @theme
   @default_types
-
-  def self.api_dir(dir = nil)
-    @api_dir = dir if dir
-    @api_dir
-  end
-
-  def self.theme(theme = nil)
-    @theme = theme if theme
-    @theme
-  end
-
-  def self.default_types(default_types = [])
-    return @default_types if default_types.blank?
-    @default_types = {}
-    default_types.each do |type|
-      @default_types[type] = []
+  @general_need
+  class << self
+    def api_dir(dir = nil)
+      @api_dir = dir if dir
+      @api_dir
     end
-    @default_types
-  end
-  def self.start_server_log_listen
-    Process.detach(
-      fork do
-        p 'Kill Apitest WebSocket Process ...'
-        `lsof -i :9527 |awk '$1 == "ruby"  {print $2}' |xargs kill -9`
-        begin
-          filename = "#{Rails.root}/log/#{Rails.env}.log"
 
-          EventMachine.run do
-            WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => 9527) do |ws|
-              proc = Proc.new { |line|
-                ws.send Ansi::To::Html.new(line.strip).to_html.strip
-              }
-              EventMachine::file_tail(filename, Reader, &proc)
-            end
-            p 'Start Apitest WebSocket Process !'
-          end
-        rescue Exception => e
-          retry
-        end
+    def theme(theme = nil)
+      @theme = theme if theme
+      @theme
+    end
+
+    def default_types(default_types = [])
+      return @default_types if default_types.blank?
+      @default_types = {}
+      default_types.each do |type|
+        @default_types[type] = []
       end
-    )
+      @default_types
+    end
+
+    def general_need(general_need = [])
+      return @general_need if general_need.blank?
+      @general_need = {}
+      general_need.each do |need|
+        @general_need[need] = { text: need.to_s , required: true }
+      end
+      @general_need
+    end
+
+    def start_server_log_listen
+      Process.detach(
+        fork do
+          p 'Kill Apitest WebSocket Process ...'
+          `lsof -i :9527 |awk '$1 == "ruby"  {print $2}' |xargs kill -9`
+          begin
+            filename = "#{Rails.root}/log/#{Rails.env}.log"
+
+            EventMachine.run do
+              WebSocket::EventMachine::Server.start(:host => "0.0.0.0", :port => 9527) do |ws|
+                proc = Proc.new { |line|
+                  ws.send Ansi::To::Html.new(line.strip).to_html.strip
+                }
+                EventMachine::file_tail(filename, Reader, &proc)
+              end
+              p 'Start Apitest WebSocket Process !'
+            end
+          rescue Exception => e
+            retry
+          end
+        end
+      )
+    end
   end
 
   class Reader < EventMachine::FileTail

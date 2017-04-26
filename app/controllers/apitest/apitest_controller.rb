@@ -44,7 +44,7 @@ module Apitest
           if defined? controller_class::APIDOC
             token_need = {
               token: {
-                text: 'token' ,
+                text:     'token' ,
                 required: true ,
               }
             } 
@@ -52,13 +52,18 @@ module Apitest
             doc[:sort] = 99 if doc[:sort].blank?
             doc[:apis].each do |k,v|
               doc[:apis][k][:params] = token_need.merge doc[:apis][k][:params] unless v[:token] == false
+              # doc[:apis][k][:params] = general_need
             end 
+            
             docs[doc[:type]] = [] if docs[doc[:type]].blank?
             docs[doc[:type]].push doc
           end
         end
       end
       docs
+    end
+    def general_need(api_params)
+
     end
   end
 end

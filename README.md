@@ -2,7 +2,7 @@
 Short description and motivation.
 
 ## Version 
-0.1.6
+0.1.8
 
 ## Installation
 添加如下代码到 Gemfile:
