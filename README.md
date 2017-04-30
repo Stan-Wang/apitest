@@ -1,8 +1,8 @@
 # Apitest
-- 通过在API controller里的常量，配置API文档
+- 通过在API controller里配置常量，生成API文档
 - 并附带一个测试界面，辅助API开发。
 - 适用与API开发人员，客户端/前端开发人员交流验证文档。
-- 目前无出参，需要提交后，得到无法完全替代API文档
+- 目前无出参，需要提交后，得到。无法完全替代API文档
 
 ## Version 
 0.1.9
@@ -199,6 +199,7 @@ class Api::V1::LoginController < ApplicationController
 - [x] 可设定公共必填项，比如token、客户端类型、客户端版本号
 - [x] 公共必填项可在指定API中关闭
 - [ ] ERROR类工具
+- [ ] 出参example
 - [ ] Apitest Example 网站
 - [ ] 使用前端route
 - [ ] 生成前端mock数据
