@@ -45,25 +45,24 @@ $(document).on "turbolinks:load" , ->
           elm         = $(e.target).parents('.api')
           result      = elm.find('.result')
           result_pre  = elm.find('.result_pre')
-          path        = elm.find('.path').val()
+          path        = elm.find('.path').val().replace ':id' , elm.find('.params[name=":id"]').val()
           method      = elm.find('.method').text()
           postData    = {}
 
           elm.find('.params').each ->
-            postData[$(this).attr('name')] = $(this).val()
+
+            postData[$(this).attr('name')] = $(this).val() unless $(this).attr('name').indexOf(':id') >= 0
           
           $.ajax 
             url       : path
             type      : method
             data      : postData
             success   : (data) =>
-              # result.val JSON.stringify(data , null , 4)
               result_pre.jsonViewer(data)
             error     : (data) =>
               result.val data.responseText
 
         clear_result  : (e) ->
-          # $(e.target).parents('.api').find('.result').val('')
           $(e.target).parents('.api').find('.result_pre').html('')
 
         log_scroll : ->

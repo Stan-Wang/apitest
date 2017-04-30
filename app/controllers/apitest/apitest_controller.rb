@@ -42,17 +42,12 @@ module Apitest
           class_match      = File.open(path).read.match(/class (.*) </)
           controller_class = class_match[1].constantize if class_match && class_match[1]
           if defined? controller_class::APIDOC
-            token_need = {
-              token: {
-                text:     'token' ,
-                required: true ,
-              }
-            } 
             doc = controller_class::APIDOC 
             doc[:sort] = 99 if doc[:sort].blank?
             doc[:apis].each do |k,v|
-              doc[:apis][k][:params] = token_need.merge doc[:apis][k][:params] unless v[:token] == false
-              # doc[:apis][k][:params] = general_need
+              d = doc[:apis][k]
+              d[:params] = general_need d[:params]                          unless Apitest::general_need.blank? 
+              d[:params] = {':id' => { required: true }}.merge d[:params]   if d[:path].include? ':id'
             end 
             
             docs[doc[:type]] = [] if docs[doc[:type]].blank?
@@ -63,7 +58,10 @@ module Apitest
       docs
     end
     def general_need(api_params)
-
+      Apitest::general_need.reverse.each do |need|
+        api_params = need.merge api_params
+      end 
+      api_params
     end
   end
 end

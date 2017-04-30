@@ -1,8 +1,11 @@
 # Apitest
-Short description and motivation.
+- 通过在API controller里的常量，配置API文档
+- 并附带一个测试界面，辅助API开发。
+- 适用与API开发人员，客户端/前端开发人员交流验证文档。
+- 目前无出参，需要提交后，得到无法完全替代API文档
 
 ## Version 
-0.1.8
+0.1.9
 
 ## Installation
 添加如下代码到 Gemfile:

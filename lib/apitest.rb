@@ -36,9 +36,10 @@ module Apitest
 
     def general_need(general_need = [])
       return @general_need if general_need.blank?
-      @general_need = {}
+      @general_need = []
       general_need.each do |need|
-        @general_need[need] = { text: need.to_s , required: true }
+        n = { need => {required: true }}
+        @general_need.push n
       end
       @general_need
     end
