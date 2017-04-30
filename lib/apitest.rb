@@ -13,7 +13,7 @@ module Apitest
   @api_dir
   @theme
   @default_types
-  @general_need
+  @public_required
   class << self
     def api_dir(dir = nil)
       @api_dir = dir if dir
@@ -34,14 +34,14 @@ module Apitest
       @default_types
     end
 
-    def general_need(general_need = [])
-      return @general_need if general_need.blank?
-      @general_need = []
-      general_need.each do |need|
+    def public_required(public_required = [])
+      return @public_required if public_required.blank?
+      @public_required = []
+      public_required.each do |need|
         n = { need => {required: true }}
-        @general_need.push n
+        @public_required.push n
       end
-      @general_need
+      @public_required
     end
 
     def start_server_log_listen

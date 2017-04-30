@@ -46,8 +46,8 @@ module Apitest
             doc[:sort] = 99 if doc[:sort].blank?
             doc[:apis].each do |k,v|
               d = doc[:apis][k]
-              d[:params] = general_need d[:params]                          unless Apitest::general_need.blank? 
-              d[:params] = {':id' => { required: true }}.merge d[:params]   if d[:path].include? ':id'
+              d           = public_required d                               unless Apitest::public_required.blank? 
+              d[:params]  = {':id' => { required: true }}.merge d[:params]  if d[:path].include? ':id'
             end 
             
             docs[doc[:type]] = [] if docs[doc[:type]].blank?
@@ -57,11 +57,11 @@ module Apitest
       end
       docs
     end
-    def general_need(api_params)
-      Apitest::general_need.reverse.each do |need|
-        api_params = need.merge api_params
+    def public_required(api)
+      Apitest::public_required.reverse.each do |need|
+        api[:params] = need.merge api[:params] if api[need.keys.first.to_sym] != false
       end 
-      api_params
+      api
     end
   end
 end
