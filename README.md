@@ -137,6 +137,59 @@ Rails.application.routes.draw do
 end
 ```
 
+如果所有API有公共必填项，例如token,version，可如下配置
+
+```ruby
+Rails.application.routes.draw do
+
+  apitest_for '/apitest' do 
+    Apitest::public_required  [ 'token' , 'version'  ]
+  end
+
+end
+```
+
+可以在指定APITEST中关闭公共必填项，比如登录API，可在具体方法的APIDOC中使用false设定
+
+```ruby
+token:false
+```
+
+完整配置方法如下
+```ruby
+class Api::V1::LoginController < ApplicationController
+
+  APIDOC = {
+    type:       '业务API' , 
+    group_name: '用户登录' ,
+    sort:      1 ,
+    apis: {
+      create: {
+        api_name:   '登录' ,
+        path:       '/api/v1/login' ,
+        method:     'post' ,
+        token:      false ,      # 这里可关闭该API的token选项
+        params: {
+          mobile: {
+            required: true ,
+          } ,
+          password: {
+            required: true
+          }
+        }
+      } 
+    }
+  }
+  def create
+    ...
+  end
+```
+
+
+
+
+
+
 
 
 ## TODO

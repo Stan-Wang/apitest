@@ -1016,12 +1016,13 @@ body .markdown-body
 }
 </style><title>README</title></head><body><article class="markdown-body"><h1 id="apitest"><a name="user-content-apitest" href="#apitest" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Apitest</h1>
 <ul>
-<li>通过在API controller里的常量，配置API文档，并附带一个测试界面，辅助API开发。</li>
-<li>适用场景</li>
-<li>目前无法替代API文档</li>
+<li>通过在API controller里的常量，配置API文档</li>
+<li>并附带一个测试界面，辅助API开发。</li>
+<li>适用与API开发人员，客户端/前端开发人员交流验证文档。</li>
+<li>目前无出参，需要提交后，得到无法完全替代API文档</li>
 </ul>
 <h2 id="version"><a name="user-content-version" href="#version" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Version</h2>
-<p>0.1.8</p>
+<p>0.1.9</p>
 <h2 id="installation"><a name="user-content-installation" href="#installation" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Installation</h2>
 <p>添加如下代码到 Gemfile:</p>
 <pre><code class="ruby">gem 'apitest'
@@ -1128,12 +1129,55 @@ Version -&gt; 分类 -&gt; API组 -&gt; API<br />
 end
 </code></pre>
 
+<p>如果所有API有公共必填项，例如token,version，可如下配置</p>
+<pre><code class="ruby">Rails.application.routes.draw do
+
+  apitest_for '/apitest' do 
+    Apitest::public_required  [ 'token' , 'version'  ]
+  end
+
+end
+</code></pre>
+
+<p>可以在指定APITEST中关闭公共必填项，比如登录API，可在具体方法的APIDOC中使用false设定</p>
+<pre><code class="ruby">token:false
+</code></pre>
+
+<p>完整配置方法如下<br />
+<pre><code class="ruby">class Api::V1::LoginController &lt; ApplicationController
+
+  APIDOC = {
+    type:       '业务API' , 
+    group_name: '用户登录' ,
+    sort:      1 ,
+    apis: {
+      create: {
+        api_name:   '登录' ,
+        path:       '/api/v1/login' ,
+        method:     'post' ,
+        token:      false ,      # 这里可关闭该API的token选项
+        params: {
+          mobile: {
+            required: true ,
+          } ,
+          password: {
+            required: true
+          }
+        }
+      } 
+    }
+  }
+  def create
+    ...
+  end
+</code></pre></p>
 <h2 id="todo"><a name="user-content-todo" href="#todo" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>TODO</h2>
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled checked> 可自定义api目录</li>
 <li class="task-list-item"><input type="checkbox" disabled checked> 可自定义theme</li>
 <li class="task-list-item"><input type="checkbox" disabled checked> 可配置分类</li>
-<li class="task-list-item"><input type="checkbox" disabled> 可设定所有API都有的必填项，比如token、客户端类型、客户端版本号</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可设定公共必填项，比如token、客户端类型、客户端版本号</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 公共必填项可在指定API中关闭</li>
 <li class="task-list-item"><input type="checkbox" disabled> ERROR类工具</li>
 <li class="task-list-item"><input type="checkbox" disabled> Apitest Example 网站</li>
 <li class="task-list-item"><input type="checkbox" disabled> 使用前端route</li>
