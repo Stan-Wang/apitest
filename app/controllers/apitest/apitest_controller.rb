@@ -42,10 +42,10 @@ module Apitest
           class_match      = File.open(path).read.match(/class (.*) </)
           controller_class = class_match[1].constantize if class_match && class_match[1]
           if defined? controller_class::APIDOC
-            doc = controller_class::APIDOC 
-            doc[:sort] = 99 if doc[:sort].blank?
+            doc         = controller_class::APIDOC 
+            doc[:sort]  = 99 if doc[:sort].blank?
             doc[:apis].each do |k,v|
-              d = doc[:apis][k]
+              d           = doc[:apis][k]
               d           = public_required d                               unless Apitest::public_required.blank? 
               d[:params]  = {':id' => { required: true }}.merge d[:params]  if d[:path].include? ':id'
             end 
@@ -55,13 +55,13 @@ module Apitest
           end
         end
       end
-      docs
+      return docs
     end
     def public_required(api)
       Apitest::public_required.reverse.each do |need|
         api[:params] = need.merge api[:params] if api[need.keys.first.to_sym] != false
       end 
-      api
+      return api
     end
   end
 end
