@@ -5,6 +5,7 @@
 #= require jquery3
 #= require jquery_ujs
 #= require turbolinks
+#= require lodash
 #= require bootstrap
 #= require adminlte/adminlte
 #= require vue
@@ -17,6 +18,7 @@ $(document).on "turbolinks:load" , ->
     vm = new Vue
       el : '#apitest_show'
       data : 
+        apitest_tab_show : 'api_test'
         root_url      : null
         apis          : null
         ws            : null
@@ -24,21 +26,39 @@ $(document).on "turbolinks:load" , ->
         current_group : ''
         current_api   : ''
         token         : ''
-        apitest_tab_show : 'api_test'
+        token_type    : ''
+        token_set     : {}
+        token_get     : []
+        headers       : {}
       mounted : ->
         @apis         = $('#data').data('apis')
-        @token        = $('#data').data('token')
+        @token_set    = $('#data').data('token-set')
+        @token_get    = $('#data').data('token-get')
+        @token_type   = @token_set[0]
         @output_area  = $('#server-logs-output')
         @root_url     = $('#data').data('root-url')
         @get_log()
+        @set_token(localStorage.apitest_token)
+        # @token_set()
 
       methods : 
-        
+        set_token : (token) ->
+          @token = token
+          localStorage.apitest_token = token
+          @set_header_token() if @token_set[0] == 'header'
+            
+        set_header_token : ->
+          @headers[@token_set[1]] = @token
+
+        fetch_token : (params) ->
+          token = eval 'params["' + @token_get.join('"]["') + '"]'
+          @set_token(token) if token
+
         group_select : (name) ->
           @current_group  = name
           @current_api    = ''
 
-        api_select : (name ) ->
+        api_select : (name) ->
           @current_api    = name
 
         api_submit : (e) ->
@@ -50,17 +70,23 @@ $(document).on "turbolinks:load" , ->
           postData    = {}
 
           elm.find('.params').each ->
-
             postData[$(this).attr('name')] = $(this).val() unless $(this).attr('name').indexOf(':id') >= 0
-          
+
           $.ajax 
             url       : path
             type      : method
             data      : postData
+            headers   : @headers
             success   : (data) =>
               result_pre.jsonViewer(data)
+              @fetch_token(data)
             error     : (data) =>
-              result.val data.responseText
+              try
+                result_pre.jsonViewer(JSON.parse(data.responseText))
+              catch e
+                result_pre.text(data.responseText)
+              
+              
 
         clear_result  : (e) ->
           $(e.target).parents('.api').find('.result_pre').html('')

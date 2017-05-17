@@ -31,6 +31,6 @@ html
         =yield
       footer.main-footer 
     -if params[:action] == 'show'
-      #data data-root-url="#{@root_url}" data-ws-url="ws://#{request.host}:9527" data-apis="#{@apidocs[params[:id]].to_json}" data-token="#{session[:token]}"
+      #data data-root-url="#{@root_url}" data-ws-url="ws://#{request.host}:9527" data-apis="#{@apidocs[params[:id]].to_json}" data-headers="#{@headers.to_json}" data-token-set="#{@token_set.to_json}" data-token-get="#{@token_get.to_json}"
 
       

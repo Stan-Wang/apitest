@@ -7,6 +7,7 @@ require "font-awesome-rails"
 require "ionicons-rails"
 require 'eventmachine'
 require 'eventmachine-tail'
+require 'lodash-rails'
 require 'websocket-eventmachine-server'
 
 module Apitest
@@ -14,6 +15,8 @@ module Apitest
   @theme
   @default_types
   @public_required
+  @token_setting
+
   class << self
     def api_dir(dir = nil)
       @api_dir = dir if dir
@@ -44,6 +47,15 @@ module Apitest
       @public_required
     end
 
+    def token_setting(setting = nil)
+      @token_setting = setting if setting
+      @token_setting
+    end
+
+    def set_headers
+      @token_setting[:set] && @token_setting[:set][1] ? {@token_setting[:set][1] => ''} : {}
+    end
+
     def start_server_log_listen
       Process.detach(
         fork do
@@ -66,18 +78,6 @@ module Apitest
           end
         end
       )
-    end
-  end
-
-  class Reader < EventMachine::FileTail
-    def initialize(path, startpos=-1, &block)
-      super(path, startpos)
-      @buffer = BufferedTokenizer.new
-      @block = block
-    end
-
-    def receive_data(data)
-      @buffer.extract(data).each { |line| @block.call(line) }
     end
   end
 end

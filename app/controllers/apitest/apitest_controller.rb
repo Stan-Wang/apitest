@@ -5,7 +5,10 @@ module Apitest
     before_action :get_doc ,:root_url
     def initialize
       super
-      @apidocs = {}
+      @apidocs    = {}
+      @headers    = Apitest::set_headers
+      @token_set =  Apitest::token_setting[:set]
+      @token_get =  Apitest::token_setting[:get]
     end
     def index
       respond_to do |format|
@@ -29,15 +32,15 @@ module Apitest
     def get_doc(path_root = nil)
       path_root ||= "app/controllers/#{Apitest.api_dir}/"
       Dir.glob("#{path_root}*").each do |path|
-        @apidocs[path.gsub("#{path_root}" , '')] =  get_version_doc "#{path}/" if File.directory?(path) && !path.gsub("#{path_root}" , '').blank?
+        @apidocs[path.gsub("#{path_root}" , '')] =  get_version_doc "#{path}" if File.directory?(path) && !path.gsub("#{path_root}" , '').blank?
       end
     end
 
-    def get_version_doc(path_root)
-      docs = Apitest::default_types.clone
+    def get_version_doc(path_root , docs = {})
+      docs = Apitest::default_types.clone if docs.blank?
       Dir.glob("#{path_root}/*").each do |path|
         if File.directory?(path)
-          docs = docs.merge get_version_doc(path)
+          docs = docs.merge get_version_doc(path , docs)
         else
           class_match      = File.open(path).read.match(/class (.*) </)
           controller_class = class_match[1].constantize if class_match && class_match[1]
@@ -45,8 +48,8 @@ module Apitest
             doc         = controller_class::APIDOC 
             doc[:sort]  = 99 if doc[:sort].blank?
             doc[:apis].each do |k,v|
-              d           = doc[:apis][k]
-              d           = public_required d                               unless Apitest::public_required.blank? 
+              d = doc[:apis][k]
+              d = public_required d                               unless Apitest::public_required.blank? 
               d[:params]  = {':id' => { required: true }}.merge d[:params]  if d[:path].include? ':id'
             end 
             

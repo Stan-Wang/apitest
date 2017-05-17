@@ -5,7 +5,7 @@
 - 目前无出参，需要提交后，得到。无法完全替代API文档
 
 ## Version 
-0.1.9
+0.2.0
 
 ## Installation
 添加如下代码到 Gemfile:
@@ -183,6 +183,7 @@ class Api::V1::LoginController < ApplicationController
   def create
     ...
   end
+  
 ```
 
 
@@ -198,6 +199,7 @@ class Api::V1::LoginController < ApplicationController
 - [x] 可配置分类
 - [x] 可设定公共必填项，比如token、客户端类型、客户端版本号
 - [x] 公共必填项可在指定API中关闭
+- [x] 支持header token和params token
 - [ ] ERROR类工具
 - [ ] 出参example
 - [ ] Apitest Example 网站
