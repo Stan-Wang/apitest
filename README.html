@@ -1015,9 +1015,14 @@ body .markdown-body
   }
 }
 </style><title>README</title></head><body><article class="markdown-body"><h1 id="apitest"><a name="user-content-apitest" href="#apitest" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Apitest</h1>
-<p>Short description and motivation.</p>
+<ul>
+<li>通过在API controller里的常量，配置API文档</li>
+<li>并附带一个测试界面，辅助API开发。</li>
+<li>适用与API开发人员，客户端/前端开发人员交流验证文档。</li>
+<li>目前无出参，需要提交后，得到无法完全替代API文档</li>
+</ul>
 <h2 id="version"><a name="user-content-version" href="#version" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Version</h2>
-<p>0.1.4</p>
+<p>0.1.9</p>
 <h2 id="installation"><a name="user-content-installation" href="#installation" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Installation</h2>
 <p>添加如下代码到 Gemfile:</p>
 <pre><code class="ruby">gem 'apitest'
@@ -1037,26 +1042,154 @@ body .markdown-body
 </code></pre>
 
 <h2 id="usage"><a name="user-content-usage" href="#usage" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Usage</h2>
-<p>约定的api目录如下：<br />
-<pre><code class="shell">├── controllers
-│   ├── api
-│   │   └── v1
-│   │       ├── foo_controller.rb
-│   │       ├── bar_controller.rb
-│   │   └── v2
-│   │       ├── foobar_controller.rb
-│   │       ├── barfoo_controller.rb
-</code></pre></p>
-<p>mount apitest到指定url，比如：</p>
-<pre><code class="ruby">mount Apitest::Engine =&gt; &quot;/apitest&quot;
+<p>在routes.rb 配置apitest 目录，比如：</p>
+<pre><code class="ruby">Rails.application.routes.draw do
 
+  apitest_for '/apitest'
+
+end
 </code></pre>
 
 <p>浏览器中访问apitest 的url</p>
+<p>默认api目录为controllers/api，目录可指定</p>
+<pre><code class="ruby">Rails.application.routes.draw do
+
+  apitest_for '/apitest' do 
+    Apitest::api_dir 'api'
+  end 
+
+end
+</code></pre>
+
+<p>默认使用blue-theme，可指定theme ，theme使用 AdminLTE，直接指定AdminLTE的theme即可：</p>
+<p><pre><code class="ruby">Rails.application.routes.draw do
+
+  apitest_for '/apitest' do 
+    Apitest::theme  'purple-light'
+  end
+
+end
+</code></pre><br />
+theme列表如下<br />
+<pre><code>black
+black-light
+blue
+blue-light
+green
+green-light
+purple
+purple-light
+red
+red-light
+yellow
+yellow-light
+</code></pre></p>
+<p>API层级为4级<br />
+Version -&gt; 分类 -&gt; API组 -&gt; API<br />
+其中Version 由第一级目录决定<br />
+分类在API中定义，定义方法如下</p>
+<pre><code class="ruby">class Api::V1::BindingTrayController &lt; Api::V1::ApplicationController
+  APIDOC = {
+    type:      '业务API' ,
+    group_name: '绑定托盘' ,
+    sort:       2 ,
+    apis: {
+      scan_sn: {  #第一条API
+        api_name: '扫描sn' ,
+        path: '/api/v1/binding_tray/scan_sn' ,
+        method: 'get' ,
+        params:{
+          barcode: {
+            text: 'sn条码' ,
+            required: true 
+          } , 
+          detail_id: {
+            text: '托盘列表id' ,
+          }
+        }
+      } ,
+      ... #第二条API
+    }
+  }
+  def scan_sn
+    ... #your code
+  end
+</code></pre>
+
+<p>默认分类为<br />
+<pre><code class="ruby">Apitest::default_types  [ '业务API' , '工具API' , '辅助API' ]
+</code></pre><br />
+默认分类可配置，例如：</p>
+<pre><code class="ruby">Rails.application.routes.draw do
+
+  apitest_for '/apitest' do 
+    Apitest::default_types  [ '银行业务API' , '企业业务API'  ]
+  end
+
+end
+</code></pre>
+
+<p>如果所有API有公共必填项，例如token,version，可如下配置</p>
+<pre><code class="ruby">Rails.application.routes.draw do
+
+  apitest_for '/apitest' do 
+    Apitest::public_required  [ 'token' , 'version'  ]
+  end
+
+end
+</code></pre>
+
+<p>可以在指定APITEST中关闭公共必填项，比如登录API，可在具体方法的APIDOC中使用false设定</p>
+<pre><code class="ruby">token:false
+</code></pre>
+
+<p>完整配置方法如下<br />
+<pre><code class="ruby">class Api::V1::LoginController &lt; ApplicationController
+
+  APIDOC = {
+    type:       '业务API' , 
+    group_name: '用户登录' ,
+    sort:      1 ,
+    apis: {
+      create: {
+        api_name:   '登录' ,
+        path:       '/api/v1/login' ,
+        method:     'post' ,
+        token:      false ,      # 这里可关闭该API的token选项
+        params: {
+          mobile: {
+            required: true ,
+          } ,
+          password: {
+            required: true
+          }
+        }
+      } 
+    }
+  }
+  def create
+    ...
+  end
+</code></pre></p>
 <h2 id="todo"><a name="user-content-todo" href="#todo" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>TODO</h2>
 <ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled> 可自定义api目录</li>
-<li class="task-list-item"><input type="checkbox" disabled> 可自定义theme</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可自定义api目录</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可自定义theme</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可配置分类</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 可设定公共必填项，比如token、客户端类型、客户端版本号</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> 公共必填项可在指定API中关闭</li>
+<li class="task-list-item"><input type="checkbox" disabled> ERROR类工具</li>
+<li class="task-list-item"><input type="checkbox" disabled> Apitest Example 网站</li>
+<li class="task-list-item"><input type="checkbox" disabled> 使用前端route</li>
+<li class="task-list-item"><input type="checkbox" disabled> 生成前端mock数据</li>
+<li class="task-list-item"><input type="checkbox" disabled> 保存API分类收起展开状态</li>
+<li class="task-list-item"><input type="checkbox" disabled> ERROR log 可选输出</li>
+<li class="task-list-item"><input type="checkbox" disabled> 一个token默认机制</li>
+<li class="task-list-item"><input type="checkbox" disabled> 客户端版本号默认升级实例</li>
+<li class="task-list-item"><input type="checkbox" disabled> 操作录屏gif</li>
+<li class="task-list-item"><input type="checkbox" disabled> 权限控制</li>
+<li class="task-list-item"><input type="checkbox" disabled> 测试数据准备，测试用例</li>
+<li class="task-list-item"><input type="checkbox" disabled> 测试中心</li>
 </ul>
 <h2 id="contributing"><a name="user-content-contributing" href="#contributing" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Contributing</h2>
 <h2 id="license"><a name="user-content-license" href="#license" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>License</h2>

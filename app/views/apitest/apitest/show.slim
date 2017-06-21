@@ -66,24 +66,44 @@ section.content
                       td 参数
                       td
                         table.table.table-hover.table-bordered
+                          tr v-if="token_type == 'params'"
+                            td
+                              span style="color:red;width:10px;display:inline-block" 
+                                span  *
+                              span token
+                            td
+                              input.form-control.params name="token" :value="token" 
                           tr v-for="(value , name , index) in api.params"
-                            td.col-md-2 v-bind:class="{'border-top-none': (index == 0)}"
+                            td.col-md-2
                               span style="color:red;width:10px;display:inline-block" 
                                 span v-if="value.required" *
                               span ="{{name}}"
-                            td v-if="name == 'token'" v-bind:class="{'border-top-none': index == 0}" 
-                              input.form-control.params :name="name" :value="token"
-                              span style="line-height:25px" = "{{value.text}}"
-                            td v-if="name != 'token'" v-bind:class="{'border-top-none': index == 0}" 
+                            td v-if="value.nested == true"
+                              table.table.table-hover 
+                                tr v-for="(v , n , i) in value" v-if="n != 'nested'"
+                                  td.col-md-3
+                                    span style="color:red;width:10px;display:inline-block" 
+                                      span v-if="v.required" *
+                                    span ="{{name}}[{{n}}]"
+                                  td 
+                                    input.form-control.params :name="name + '[' + n + ']'" 
+                                    span style="line-height:25px" = "{{v.text}}"
+                            td v-else="" 
                               input.form-control.params :name="name" 
                               span style="line-height:25px" = "{{value.text}}"
+                            / td v-if="name == 'token'" v-bind:class="{'border-top-none': index == 0}" 
+                            /   input.form-control.params :name="name" :value="token"
+                            /   span style="line-height:25px" = "{{value.text}}"
+                            / td v-if="name != 'token'" v-bind:class="{'border-top-none': index == 0}" 
+                            /   input.form-control.params :name="name" 
+                            /   span style="line-height:25px" = "{{value.text}}"
                     tr
                       td
                       td 
                         button.btn.bg-olive.btn-flat @click="api_submit"  提交                    
-                        button.btn.bg-orange.btn-flat style="margin-left:10px;margin-right:10px"   @click="clear_result" 清空结果
-                        button.btn.bg-purple.btn-flat style="margin-left:10px;margin-right:10px" @click="show_server_log" 查看server log
-                        button.btn.btn-warning.btn-flat  style="margin-right:10px" @click="clear_log"  清空log
+                        button.btn.bg-orange.btn-flat style="margin-left:10px;margin-right:10px"    @click="clear_result"     清空结果
+                        button.btn.bg-purple.btn-flat style="margin-left:10px;margin-right:10px"    @click="show_server_log"  查看server log
+                        button.btn.btn-warning.btn-flat  style="margin-right:10px"                  @click="clear_log"        清空log
                     tr
                       td 
                       td

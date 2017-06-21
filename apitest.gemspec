@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "font-awesome-rails"
   s.add_dependency "ionicons-rails"
   s.add_dependency "eventmachine"
+  s.add_dependency "lodash-rails"
   s.add_dependency "eventmachine-tail"
   s.add_dependency "websocket-eventmachine-server"
 end

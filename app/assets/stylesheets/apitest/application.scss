@@ -1,5 +1,5 @@
 // Place all the styles related to the apitest/v1 controller here.
-// They will automatically be included in application.css.
+// They will automatically be included in application.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 //= require_directory .
 //= require bootstrap
@@ -24,6 +24,8 @@
     background-color: #fff;
     height: 514px;
     border-radius: 0px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
     padding: 15px 30px 15px 30px;
   }
   .nav-pills.nav-stacked{

@@ -19,6 +19,7 @@ gem "ansi-to-html"
 gem "font-awesome-rails"
 gem "ionicons-rails"
 gem "jbuilder"
+gem 'lodash-rails'
 gem 'eventmachine'
 gem 'eventmachine-tail'
 gem 'websocket-eventmachine-server'
